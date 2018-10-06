@@ -2,7 +2,7 @@
  * ******************************************************
  * @ Filename:main.c
  * @ Author:syc
- * @ Description:This is the main program of the server, which is used to parse the command.
+ * @ Description:This is the main program of the shell, which is used to parse the command.
  * ******************************************************
  */
 
