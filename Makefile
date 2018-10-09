@@ -34,7 +34,7 @@ TARGET := webshell
 obj-y += main.o
 
 # 添加顶层目录下的子文件夹（注意目录名后面加一个/）
-obj-y += build_in/
+obj-y += common/
 
 all: 
 	make -C ./ -f $(TOPDIR)/Makefile.build
@@ -42,10 +42,8 @@ all:
 
 clean:
 	rm -f $(shell find -name "*.o")
-	rm -f $(TARGET)
 
 distclean:
 	rm -f $(shell find -name "*.o")
 	rm -f $(shell find -name "*.d")
-	rm -f $(TARGET)
 	
