@@ -1,9 +1,7 @@
 /*
- * ***************************************************
- * @ Filename:main.h
- * @ Author:syc
  * @ Description:This is the header file of main.c
- * ***************************************************
+ * @ Author:Sangyuchen
+ * @ Date:2018-10-10
  */
 
 #ifndef __MAIN__
@@ -19,7 +17,7 @@
 
 #define MAXLINE 4096
 
-typedef PArgc int
-typedef PArgv char**
+typedef int PArgc;
+typedef char** PArgv;
 
 #endif

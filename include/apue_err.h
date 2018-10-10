@@ -1,9 +1,7 @@
 /*
- * **********************************************
- * @ Filename:apue_err.h
- * @ From:APUE
  * @ Description:This is the header file of apue_err.c
- * **********************************************
+ * @ From:APUE
+ * @ Date:2018-10-10
  */
 
 #ifndef __APUE_ERR__

@@ -1,9 +1,7 @@
 /*
- * **************************************
- * @ Filename:apue_err.c
- * @ From:APUE
  * @ Description:Non daemon error handing
- * **************************************
+ * @ From:APUE
+ * @ Date:2018-10-10
  */
 
 #include "apue_err.h"
