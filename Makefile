@@ -10,6 +10,9 @@ STRIP		= $(CROSS_COMPILE)strip
 OBJCOPY		= $(CROSS_COMPILE)objcopy
 OBJDUMP		= $(CROSS_COMPILE)objdump
 
+TOPDIR := $(shell pwd)
+export TOPDIR
+
 # export导出的变量是给子目录下的Makefile使用的
 export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP
 
@@ -22,9 +25,6 @@ CFLAGS += -I $(shell pwd)/include -I /usr/include/
 LDFLAGS := -L /usr/lib/
 
 export CFLAGS LDFLAGS
-
-TOPDIR := $(shell pwd)
-export TOPDIR
 
 # 定义将来编译生成的可执行程序的名字
 TARGET := webshell

@@ -12,8 +12,10 @@ int pwd(int argc,char **argv,Cmd *pcmd){
         return -1;
     }
     char *path=getcwd(NULL,0);
-    if(path==NULL)
+    if(path==NULL){
         err_ret("getcwd faild");
+        return -1;
+    }
 
     printf("%s\n",path);
 

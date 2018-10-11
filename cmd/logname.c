@@ -14,7 +14,7 @@ int logname(int argc,char **argv,Cmd *pcmd){
 
     char * l_name=getlogin();
     if(l_name==NULL)
-        err_ret("getlogin failed");
+        err_sys("getlogin failed");
 
     printf("%s\n",l_name);
 
