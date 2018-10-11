@@ -14,8 +14,10 @@
 #include <limits.h>
 #include "build_in.h"
 #include "apue_err.h"
+#include "general_list.h"
 
 #define MAXLINE 4096
+#define CMD_NUM 256
 
 typedef int PArgc;
 typedef char** PArgv;

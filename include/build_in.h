@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include "apue_err.h"
+#include "general_list.h"
 
 typedef struct cmd{
     char *cmd_name;
@@ -19,6 +20,7 @@ typedef struct cmd{
     int (* cmd_func)(int argc,char **argv,struct cmd * pcmd);
 }Cmd;
 
+int cmd_array_register(Array* ap);
 Cmd * pwd_init();
 
 #endif

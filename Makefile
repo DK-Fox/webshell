@@ -17,7 +17,7 @@ export TOPDIR
 export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP
 
 # 编译器在编译时的参数设置
-CFLAGS := -Wall -O2 -g
+CFLAGS := -Wall -O0 -g
 # 添加头文件路径，不添加的话include目录下的头文件编译时找不到
 CFLAGS += -I $(shell pwd)/include -I /usr/include/
 

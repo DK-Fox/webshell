@@ -8,21 +8,21 @@
 
 static int print_pr();
 static int readline(PArgc *argc,PArgv * argv);
-static int parse_command(int argc,char **argv);
+static int parse_command(Array* cmds,int argc,char **argv);
+static int cmd_array_init(Array** ap);
 
 char line_buf[MAXLINE];
 
 int main(){
-    printf("My webshell starts ...\n");
-
-    PArgc * pargc=(PArgc*)malloc(sizeof(PArgc));
-    PArgv * pargv=(PArgv*)malloc(sizeof(PArgv));
-
+    PArgc* pargc=(PArgc*)malloc(sizeof(PArgc));
+    PArgv* pargv=(PArgv*)malloc(sizeof(PArgv));
+    Array* cmds;
+    cmd_array_init(&cmds);
     while(1){
         do
             print_pr();
         while(readline(pargc,pargv)==-1);
-        parse_command(*pargc,*pargv);
+        parse_command(cmds,*pargc,*pargv);
         //external_cmd();
     }
     exit(0);
@@ -85,16 +85,23 @@ static int readline(PArgc *argc,PArgv * argv){
     return 0;
 }
 
-static int parse_command(int argc,char **argv){
-    for(int i=0;i<argc;i++){
-        printf("%s\n",argv[i]);
+static int parse_command(Array* cmds,int argc,char **argv){
+    int i;
+    for (i = 0; i < cmds->len && strcmp(((Cmd*)cmds->data[i])->cmd_name,argv[0]); i++);
+    if(i!=cmds->len){
+        Cmd* cur_cmd=(Cmd*)cmds->data[i];
+        cur_cmd->cmd_func(argc,argv,cur_cmd);
     }
+
     if(!strcmp(argv[0],"exit"))
         exit(0);
-    Cmd * pcmd=pwd_init();
-    if(!strcmp(argv[0],pcmd->cmd_name))
-        pcmd->cmd_func(argc,argv,pcmd);
+
     return 0;
 }
 
-
+static int cmd_array_init(Array** ap){
+    if (!(*ap=create_array(CMD_NUM)))
+        err_quit("create_array failed");
+    cmd_array_register(*ap);
+    return 0;
+}
