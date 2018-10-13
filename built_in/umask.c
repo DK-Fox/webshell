@@ -45,7 +45,7 @@ Cmd * umask_init(){
         return NULL;
     }
     pt->cmd_name="umask";
-    pt->cmd_usage="umask: usage: umask [dir]";
+    pt->cmd_usage="umask: usage: umask [mode]";
     pt->cmd_func=sh_umask;
     return pt;
 }

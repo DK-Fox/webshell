@@ -10,9 +10,15 @@ static int print_pr();
 static int readline(PArgc *argc,PArgv * argv);
 static int parse_command(Array* cmds,int argc,char **argv);
 static int cmd_array_init(Array** ap);
+static int external_cmd(int argc,char **argv);
+static int user_init();
 
 //BUF for reading commands.
 char line_buf[MAXLINE];
+//Status from executing external command.($?)
+int g_status;
+//User information.
+struct passwd* p_passwd;
 //Umask
 mode_t umask_mode=DEFAULT_UMASK;
 
@@ -21,8 +27,9 @@ int main(){
     PArgv* pargv=(PArgv*)malloc(sizeof(PArgv));
     Array* cmds;
 
-    //Initialize umask
-    umask(umask_mode);
+    //Initialize user informationi.
+    user_init();
+
     //Initialize command array.
     cmd_array_init(&cmds);
     while(1){
@@ -31,10 +38,14 @@ int main(){
             print_pr();
         //Read a line.
         while(readline(pargc,pargv)==-1);
+
         //Parse built-in commands.
-        parse_command(cmds,*pargc,*pargv);
+        if(!parse_command(cmds,*pargc,*pargv))
+            continue;
+
         //Parsing external commands.
-        //external_cmd();
+        if(external_cmd(*pargc,*pargv)==1)
+            err_msg("Command not found");
     }
 }
 
@@ -58,11 +69,6 @@ static int print_pr(){
     char * path;
     if(!(path=getcwd(NULL,0)))
         err_sys("getcwd failed");
-
-    //Get user information.
-    struct passwd* p_passwd;
-    if(!(p_passwd=getpwnam(logname)))
-        err_ret("getpwnam failed");
 
     //Replace home dir as "~".
     char chpath[MAXLINE];
@@ -136,6 +142,7 @@ static int readline(PArgc *argc,PArgv * argv){
  *         argv:all parameter
  * @ Return:success:0
  *          failure:-1
+ *          not found:1
  */
 static int parse_command(Array* cmds,int argc,char **argv){
     int i;
@@ -143,10 +150,11 @@ static int parse_command(Array* cmds,int argc,char **argv){
     for (i = 0; i < cmds->len && strcmp(((Cmd*)cmds->data[i])->cmd_name,argv[0]); i++);
     if(i!=cmds->len){
         Cmd* cur_cmd=(Cmd*)cmds->data[i];
-        cur_cmd->cmd_func(argc,argv,cur_cmd);
+        g_status=cur_cmd->cmd_func(argc,argv,cur_cmd);
+        return 0;
     }
 
-    return 0;
+    return 1;
 }
 
 /*
@@ -162,6 +170,62 @@ static int cmd_array_init(Array** ap){
 
     //Register commands.
     cmd_array_register(*ap);
+
+    return 0;
+}
+
+/*
+ * @ Function:Execute external commands.
+ * @ Return:success:0
+ *          failure:-1
+ *          not found:1
+ */
+static int external_cmd(int argc,char **argv){
+    char path[MAXLINE];
+    pid_t pid;
+
+    //Confirm command existence.
+    sprintf(path,CMD_DIR"%s",argv[0]);
+    if(access(path,F_OK))
+        return 1;
+
+    //Execute program in "bin/"
+    if((pid=fork())<0){
+        err_ret("fork failed");
+        return -1;
+    }else if(pid>0){
+        waitpid(pid,&g_status,0);
+        return 0;
+    }else{
+        if(execv(path,argv)<0){
+            err_ret("execv failed");
+            return -1;
+        }
+    }
+    return -1;
+}
+
+/*
+ * @ Function:Initialize user information.
+ * @ Return:success:0
+ *          failed:-1
+ */
+static int user_init(){
+    //Get login name.
+    char * logname;
+    if(!(logname=getlogin()))
+        err_sys("getlogin failed");
+
+    //Get user information.
+    if(!(p_passwd=getpwnam(logname)))
+        err_sys("getpwnam failed");
+
+    //Change dir.
+    if(chdir(p_passwd->pw_dir))
+        err_sys("chdir failed");
+
+    //Initialize umask.
+    umask(umask_mode);
 
     return 0;
 }

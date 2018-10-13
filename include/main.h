@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <limits.h>
 #include <pwd.h>
+#include <sys/wait.h>
 #include "built_in.h"
 #include "apue_err.h"
 #include "general_array.h"
@@ -20,6 +21,7 @@
 #define MAXLINE 4096 //Max size of a line
 #define CMD_NUM 256 //Number of built-in commands
 #define DEFAULT_UMASK (S_IWGRP|S_IWOTH)//Default umask
+#define CMD_DIR "/home/dkfox/pcode/webshell/bin/" //External command dir
 
 //Color of front
 #define F_L_RED "\033[1;31m" //Light red
