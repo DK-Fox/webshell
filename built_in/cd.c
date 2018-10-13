@@ -17,7 +17,7 @@
 int sh_cd(int argc,char **argv,Cmd *pcmd){
     //Check format.
     if(argc>2){
-        printf("%s\n",pcmd->cmd_usage);
+        err_msg("%s\n",pcmd->cmd_usage);
         return -1;
     }
 

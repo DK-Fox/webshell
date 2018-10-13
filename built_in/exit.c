@@ -17,7 +17,7 @@
 int sh_exit(int argc,char **argv,Cmd *pcmd){
     //Check format.
     if(argc>2||(argc==2&&!isdigit(argv[1][0]))){
-        printf("%s\n",pcmd->cmd_usage);
+        err_msg("%s\n",pcmd->cmd_usage);
         return -1;
     }
 

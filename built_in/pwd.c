@@ -17,7 +17,7 @@
 int sh_pwd(int argc,char **argv,Cmd *pcmd){
     //Check.
     if(argc!=1){
-        printf("%s\n",pcmd->cmd_usage);
+        err_msg("%s\n",pcmd->cmd_usage);
         return -1;
     }
 
