@@ -35,7 +35,7 @@ obj-y += main.o
 
 # 添加顶层目录下的子文件夹（注意目录名后面加一个/）
 obj-y += common/
-obj-y += build_in/
+obj-y += built_in/
 
 all: 
 	make -C ./ -f $(TOPDIR)/Makefile.build
