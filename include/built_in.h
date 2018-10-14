@@ -33,6 +33,8 @@ Cmd * cd_init();
 Cmd * umask_init();
 Cmd * help_init();
 Cmd * ulimit_init();
+Cmd * echo_init();
+Cmd * export_init();
 
 //ulimit information.
 typedef struct ulimit{

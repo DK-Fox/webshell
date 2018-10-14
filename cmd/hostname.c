@@ -13,7 +13,7 @@
 int main(int argc,char *argv[]){
     //Check format.
     if(argc!=1)
-        err_quit("hostname: usage: hostnam");
+        err_quit("hostname: usage: hostname");
 
     //Get hostname.
     char h_name[HOST_NAME_MAX];

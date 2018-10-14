@@ -1,3 +1,5 @@
+obj-y += export.o
+obj-y += echo.o
 obj-y += ulimit.o
 obj-y += help.o
 obj-y += umask.o

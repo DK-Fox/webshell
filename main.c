@@ -12,21 +12,29 @@ static int parse_command(Array* cmds,int argc,char **argv);
 static int cmd_array_init();
 static int external_cmd(int argc,char **argv);
 static int user_init();
+static int env_init();
 
 //BUF for reading commands.
 char line_buf[MAXLINE];
 //Status from executing external command.($?)
 int g_status;
-//User information.
-struct passwd* p_passwd;
 //Umask
 mode_t umask_mode=DEFAULT_UMASK;
 //Command array.
 Array* cmds;
+//Env
+char env_hostname[MAXLINE];
+char env_pwd[MAXLINE];
+char env_home[MAXLINE];
+char env_oldpwd[MAXLINE];
+char env_username[MAXLINE];
 
 int main(){
     PArgc* pargc=(PArgc*)malloc(sizeof(PArgc));
     PArgv* pargv=(PArgv*)malloc(sizeof(PArgv));
+
+    //Initialize environment.
+    env_init();
 
     //Initialize user informationi.
     user_init();
@@ -56,25 +64,30 @@ int main(){
  *          failure:-1
  */
 static int print_pr(){
-    //Get host name.
-    char hostname[HOST_NAME_MAX];
-    if(gethostname(hostname,HOST_NAME_MAX-1))
-        err_sys("gethostname failed");
+    //Get hostname;
+    char * hostname;
+    if(!(hostname=getenv("HOSTNAME")))
+        err_sys("getenv failed:HOSTNAME");
 
     //Get login name.
     char * logname;
-    if(!(logname=getlogin()))
-        err_sys("getlogin failed");
+    if(!(logname=getenv("USERNAME")))
+        err_sys("getenv failed:USERNAME");
 
     //Get the current path.
     char * path;
-    if(!(path=getcwd(NULL,0)))
-        err_sys("getcwd failed");
+    if(!(path=getenv("PWD")))
+        err_sys("getenv failed:PWD");
+
+    //Get home dir.
+    char * home;
+    if(!(home=getenv("HOME")))
+        err_sys("getenv failed:HOME");
 
     //Replace home dir as "~".
     char chpath[MAXLINE];
-    if(strstr(path,p_passwd->pw_dir)){
-        sprintf(chpath,"~%s",path+strlen(p_passwd->pw_dir));
+    if(strstr(path,home)){
+        sprintf(chpath,"~%s",path+strlen(home));
     }else
         sprintf(chpath,"%s",path);
 
@@ -105,13 +118,14 @@ static int readline(PArgc *argc,PArgv * argv){
     for(int i=0;i<length-1;i++){
         //Deal with quote.
         if(strchr("\"\'",line_buf[i])!=NULL && line_buf[i-1]!='\\'){
+            if(line_buf[i-1]==' '||line_buf[i-1]=='\t')
+                cnt++;
             char *pch=NULL;
             while((pch=strchr(&line_buf[i+1],line_buf[i]))!=NULL && *(pch-1)=='\\');
             if(pch==NULL){
                 return -1;
             }else{
                 i+=pch-&line_buf[i];
-                cnt++;
                 continue;
             }
         }
@@ -212,21 +226,60 @@ static int external_cmd(int argc,char **argv){
  *          failed:-1
  */
 static int user_init(){
-    //Get login name.
-    char * logname;
-    if(!(logname=getlogin()))
-        err_sys("getlogin failed");
+    char * home;
 
-    //Get user information.
-    if(!(p_passwd=getpwnam(logname)))
-        err_sys("getpwnam failed");
+    if(!(home=getenv("HOME")))
+        err_sys("getenv failed:HOME");
 
     //Change dir.
-    if(chdir(p_passwd->pw_dir))
+    if(chdir(home))
         err_sys("chdir failed");
 
     //Initialize umask.
     umask(umask_mode);
+
+    return 0;
+}
+
+/*
+ * @ Function:Initialize environment.
+ * @ Return:success:0
+ *          failure:-1
+ */
+static int env_init(){
+    //Put env for shell.
+
+    //Env:HOSTNAME
+    char hostname[HOST_NAME_MAX];
+    if(gethostname(hostname,HOST_NAME_MAX-1))
+        err_sys("gethostname failed");
+    sprintf(env_hostname,"HOSTNAME=%s",hostname);
+    if(putenv(env_hostname))
+        err_sys("putenv failed:HOSTNAME");
+
+    //Env:USERNAME
+    char * username;
+    if(!(username=getlogin()))
+        err_sys("getlogin failed");
+    sprintf(env_username,"USERNAME=%s",username);
+    if(putenv(env_username))
+        err_sys("putenv failed:USERNAME");
+
+    //Env:HOME
+    struct passwd* p_passwd;
+    if(!(p_passwd=getpwnam(username)))
+        err_sys("getpwnam failed");
+    sprintf(env_home,"HOME=%s",p_passwd->pw_dir);
+    if(putenv(env_home))
+        err_sys("putenv failed:HOME");
+
+    //Env:PWD,OLDPWD
+    sprintf(env_pwd,"PWD=%s",p_passwd->pw_dir);
+    if(putenv(env_pwd))
+        err_sys("putenv failed:PWD");
+    sprintf(env_oldpwd,"OLDPWD=%s",p_passwd->pw_dir);
+    if(putenv(env_oldpwd))
+        err_sys("putenv failed:OLDPWD");
 
     return 0;
 }

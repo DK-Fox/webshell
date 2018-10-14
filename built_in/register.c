@@ -31,5 +31,11 @@ int cmd_array_register(Array* ap){
     //ulimit
     ap->array_append(ap,(ElemType*)ulimit_init());
 
+    //echo
+    ap->array_append(ap,(ElemType*)echo_init());
+
+    //export
+    ap->array_append(ap,(ElemType*)export_init());
+
     return 0;
 }

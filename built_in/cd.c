@@ -6,6 +6,10 @@
 
 #include "built_in.h"
 
+//Environment.
+extern char env_pwd[MAXLINE];
+extern char env_oldpwd[MAXLINE];
+
 /*
  * @ Function:Define "cd" command.
  * @ Input:argc:number of parameter
@@ -21,12 +25,36 @@ int sh_cd(int argc,char **argv,Cmd *pcmd){
         return -1;
     }
 
-
     //cd.
     if(chdir(argv[1])){
         err_ret("chdir failed");
         return -1;
     }
+
+    //Update environment.
+
+    //Env:OLDPWD
+    char *env;
+    if(!(env=getenv("PWD"))){
+        err_ret("getenv failed:PWD");
+        return -1;
+    }
+    sprintf(env_oldpwd,"OLDPWD=%s",env);
+    if(putenv(env_oldpwd)){
+        err_ret("putenv failed:OLDPWD");
+        return -1;
+    }
+
+    //Env:PWD
+    char cur_pwd[MAXLINE-4];
+    if(argv[1][0]!='/')
+        sprintf(cur_pwd,"%s/%s",env,argv[1]);
+    sprintf(env_pwd,"PWD=%s",cur_pwd);
+    if(putenv(env_pwd)){
+        err_ret("putenv failed:PWD");
+        return -1;
+    }
+
     return 0;
 }
 
