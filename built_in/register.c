@@ -25,5 +25,11 @@ int cmd_array_register(Array* ap){
     //umask
     ap->array_append(ap,(ElemType*)umask_init());
 
+    //help
+    ap->array_append(ap,(ElemType*)help_init());
+
+    //ulimit
+    ap->array_append(ap,(ElemType*)ulimit_init());
+
     return 0;
 }

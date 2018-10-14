@@ -14,6 +14,7 @@
 #include <limits.h>
 #include <pwd.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include "built_in.h"
 #include "apue_err.h"
 #include "general_array.h"

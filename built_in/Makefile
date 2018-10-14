@@ -1,3 +1,5 @@
+obj-y += ulimit.o
+obj-y += help.o
 obj-y += umask.o
 obj-y += cd.o
 obj-y += exit.o

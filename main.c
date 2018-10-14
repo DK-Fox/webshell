@@ -9,7 +9,7 @@
 static int print_pr();
 static int readline(PArgc *argc,PArgv * argv);
 static int parse_command(Array* cmds,int argc,char **argv);
-static int cmd_array_init(Array** ap);
+static int cmd_array_init();
 static int external_cmd(int argc,char **argv);
 static int user_init();
 
@@ -21,17 +21,18 @@ int g_status;
 struct passwd* p_passwd;
 //Umask
 mode_t umask_mode=DEFAULT_UMASK;
+//Command array.
+Array* cmds;
 
 int main(){
     PArgc* pargc=(PArgc*)malloc(sizeof(PArgc));
     PArgv* pargv=(PArgv*)malloc(sizeof(PArgv));
-    Array* cmds;
 
     //Initialize user informationi.
     user_init();
 
     //Initialize command array.
-    cmd_array_init(&cmds);
+    cmd_array_init();
     while(1){
         do
             //Output prompt.
@@ -163,13 +164,13 @@ static int parse_command(Array* cmds,int argc,char **argv){
  * @ Return:success:0
  *          failure:-1
  */
-static int cmd_array_init(Array** ap){
+static int cmd_array_init(){
     //Create command array.
-    if (!(*ap=create_array(CMD_NUM)))
+    if (!(cmds=create_array(CMD_NUM)))
         err_quit("create_array failed");
 
     //Register commands.
-    cmd_array_register(*ap);
+    cmd_array_register(cmds);
 
     return 0;
 }

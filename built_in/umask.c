@@ -6,6 +6,7 @@
 
 #include "built_in.h"
 
+//Convert char of number to number
 #define TO_NUM(x) ((x)-48)
 
 extern mode_t umask_mode;
