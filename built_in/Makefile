@@ -1,3 +1,7 @@
+obj-y += set.o
+obj-y += unset.o
+obj-y += alias.o
+obj-y += unalias.o
 obj-y += export.o
 obj-y += echo.o
 obj-y += ulimit.o

@@ -13,6 +13,8 @@ static int cmd_array_init();
 static int external_cmd(int argc,char **argv);
 static int user_init();
 static int env_init();
+static int alias_array_init();
+static int var_array_init();
 
 //BUF for reading commands.
 char line_buf[MAXLINE];
@@ -22,6 +24,10 @@ int g_status;
 mode_t umask_mode=DEFAULT_UMASK;
 //Command array.
 Array* cmds;
+//Variable array.
+Array* vars;
+//Alias array.
+Array* aliases;
 //Env
 char env_hostname[MAXLINE];
 char env_pwd[MAXLINE];
@@ -41,6 +47,12 @@ int main(){
 
     //Initialize command array.
     cmd_array_init();
+
+    //Initialize variable array.
+    var_array_init();
+
+    //Initialize alias array.
+    alias_array_init();
     while(1){
         do
             //Output prompt.
@@ -161,8 +173,16 @@ static int readline(PArgc *argc,PArgv * argv){
  */
 static int parse_command(Array* cmds,int argc,char **argv){
     int i;
+    char cmd_argv0[MAXLINE];
+
+    //Variable.
+    if(argc==1&&strchr(argv[0],'='))
+        strcpy(cmd_argv0,"set");
+    else
+        strcpy(cmd_argv0,argv[0]);
+
     //Traverse built-in command.
-    for (i = 0; i < cmds->len && strcmp(((Cmd*)cmds->data[i])->cmd_name,argv[0]); i++);
+    for (i = 0; i < cmds->len && strcmp(((Cmd*)cmds->data[i])->cmd_name,cmd_argv0); i++);
     if(i!=cmds->len){
         Cmd* cur_cmd=(Cmd*)cmds->data[i];
         g_status=cur_cmd->cmd_func(argc,argv,cur_cmd);
@@ -174,7 +194,6 @@ static int parse_command(Array* cmds,int argc,char **argv){
 
 /*
  * @ Function:Initialize command array.
- * @ Output:ap:command array after initializing
  * @ Return:success:0
  *          failure:-1
  */
@@ -283,3 +302,30 @@ static int env_init(){
 
     return 0;
 }
+
+/*
+ * @ Function:Initialize variable array.
+ * @ Return:success:0
+ *          failure:-1
+ */
+static int var_array_init(){
+    //Create variable array.
+    if (!(vars=create_array(MAXLINE)))
+        err_quit("create_array failed");
+
+    return 0;
+}
+
+/*
+ * @ Function:Initialize alias array.
+ * @ Return:success:0
+ *          failure:-1
+ */
+static int alias_array_init(){
+    //Create alias array.
+    if (!(aliases=create_array(MAXLINE)))
+        err_quit("create_array failed");
+
+    return 0;
+}
+

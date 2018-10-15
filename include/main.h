@@ -32,4 +32,16 @@
 typedef int PArgc;
 typedef char** PArgv;
 
+//Variable
+typedef struct{
+    char *name;
+    char *value;
+}Var;
+
+//Alias
+typedef struct{
+    char *name;
+    char *value;
+}Alias;
+
 #endif

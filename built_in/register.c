@@ -37,5 +37,17 @@ int cmd_array_register(Array* ap){
     //export
     ap->array_append(ap,(ElemType*)export_init());
 
+    //set
+    ap->array_append(ap,(ElemType*)set_init());
+
+    //unset
+    ap->array_append(ap,(ElemType*)unset_init());
+
+    //alias
+    ap->array_append(ap,(ElemType*)alias_init());
+
+    //unalias
+    ap->array_append(ap,(ElemType*)unalias_init());
+
     return 0;
 }
