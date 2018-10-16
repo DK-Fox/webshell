@@ -11,6 +11,7 @@ extern Array* vars;
 
 static int create_variable(char *name,char* value);
 static int print_var(ElemType* data);
+static int set_var(char *name,char* value);
 
 /*
  * @ Function:Define "set" command.
@@ -38,6 +39,7 @@ int sh_set(int argc,char **argv,Cmd *pcmd){
         return 0;
     }
 
+
     char * ch=strchr(argv[0],'=');
     //Add variable.
     if(*(ch+1)=='\"'||*(ch+1)=='\''){
@@ -47,10 +49,37 @@ int sh_set(int argc,char **argv,Cmd *pcmd){
             argv[0][strlen(argv[0])-1]='\0';
         *(ch+1)='\0';
         *ch='\0';
-        create_variable(argv[0],ch+2);
+        set_var(argv[0],ch+2);
     }else{
         *ch='\0';
-        create_variable(argv[0],ch+1);
+        set_var(argv[0],ch+1);
+    }
+
+    return 0;
+}
+
+/*
+ * @ Function:Set a variable.
+ * @ Input:name:variable name.
+ *         value:variable value.
+ * @ Return:success:0
+ *          failure:-1
+ */
+static int set_var(char *name,char* value){
+    //Search for repeating variable.
+    int i;
+    for (i=0;i<vars->len;i++)
+        if(!strcmp(((Var*)vars->data[i])->name,name))
+            break;
+
+    //Create a new variable or update old variable.
+    if(i==vars->len)
+        create_variable(name,value);
+    else{
+        Var *var=(Var*)*(vars->get_addr(vars,i));
+        free(var->value);
+        var->value=(char*)malloc(strlen(value)+1);
+        strcpy(var->value,value);
     }
 
     return 0;
