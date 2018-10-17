@@ -5,6 +5,9 @@
  */
 
 #include "built_in.h"
+#include "main.h"
+
+extern Array* vars;
 
 /*
  * @ Function:Define "echo" command.
@@ -37,7 +40,15 @@ int sh_echo(int argc,char **argv,Cmd *pcmd){
     char * var;
     if(argv[1][0]=='$'){
         //In variable.
-        ;
+        int i;
+        for (i=0;i<vars->len;i++)
+            if(!strcmp(((Var*)vars->data[i])->name,&argv[1][1]))
+                break;
+        if (i==vars->len) {
+            printf("\n");
+        } else {
+            printf("%s\n",((Var*)vars->data[i])->value);
+        }
 
         //In environment.
         if((var=getenv(&argv[1][1]))){
