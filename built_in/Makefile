@@ -1,3 +1,4 @@
+obj-y += type.o
 obj-y += set.o
 obj-y += unset.o
 obj-y += alias.o

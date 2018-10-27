@@ -338,20 +338,19 @@ static int alias_array_init(){
  *          failure:-1
  */
 static int convert_para(PArgc *argc,PArgv * argv){
-    //Convert alias.
-    int i;
-    for (i=0;i<aliases->len;i++)
-        if(!strcmp(((Alias*)aliases->data[i])->name,argv[0]))
-            break;
-    if(i!=aliases->len){
+    /*Convert alias.*/
 
-    }
+        /*if(!strcmp(((Alias*)aliases->data[i])->name,argv[0]))*/
+            /*break;*/
+    /*if(i!=aliases->len){*/
 
-    //Convert variable.
-    for (i=0;i<vars->len;i++)
-        if(!strcmp(((Var*)vars->data[i])->name,argv[1]))
-            break;
-    if(i!=vars->len)
-        vars->array_delete(vars,i);
+    /*}*/
 
+    /*Convert variable.*/
+    /*for (i=0;i<vars->len;i++)*/
+        /*if(!strcmp(((Var*)vars->data[i])->name,argv[1]))*/
+            /*break;*/
+    /*if(i!=vars->len)*/
+        /*vars->array_delete(vars,i);*/
+    return 0;
 }

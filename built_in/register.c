@@ -49,5 +49,7 @@ int cmd_array_register(Array* ap){
     //unalias
     ap->array_append(ap,(ElemType*)unalias_init());
 
+    //type
+    ap->array_append(ap,(ElemType*)type_init());
     return 0;
 }

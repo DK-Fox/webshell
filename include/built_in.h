@@ -39,6 +39,7 @@ Cmd * set_init();
 Cmd * unset_init();
 Cmd * alias_init();
 Cmd * unalias_init();
+Cmd * type_init();
 
 //ulimit information.
 typedef struct ulimit{

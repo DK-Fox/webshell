@@ -8,6 +8,7 @@
 #include "main.h"
 
 extern Array* vars;
+extern char ** environ;
 
 static int create_variable(char *name,char* value);
 static int print_var(ElemType* data);
@@ -31,7 +32,10 @@ int sh_set(int argc,char **argv,Cmd *pcmd){
     //Set
     if(!strcmp(argv[0],"set")){
         //Print envionment.
-        ;
+        char **p=environ;
+        while (*p!=NULL) {
+            printf("%s\n",*p++);
+        }
 
         //Print variable.
         vars->traverse_array(vars,print_var);

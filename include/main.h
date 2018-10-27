@@ -22,7 +22,7 @@
 #define MAXLINE 4096 //Max size of a line
 #define CMD_NUM 256 //Number of built-in commands
 #define DEFAULT_UMASK (S_IWGRP|S_IWOTH)//Default umask
-#define CMD_DIR "/home/dkfox/pcode/webshell/bin/" //External command dir
+#define CMD_DIR "/home/dkfox/code/webshell/bin/" //External command dir
 
 //Color of front
 #define F_L_RED "\033[1;31m" //Light red
