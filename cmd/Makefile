@@ -36,6 +36,13 @@ BINDIR= $(shell pwd)/../bin
 all: 
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/hostname ../common/apue_err.c hostname.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/logname ../common/apue_err.c logname.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/mkdir ../common/apue_err.c mkdir.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/ls ../common/apue_err.c ls.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/chmod ../common/apue_err.c chmod.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/rm ../common/apue_err.c rm.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/rename ../common/apue_err.c rename.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/ln ../common/apue_err.c ln.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/rmdir ../common/apue_err.c rmdir.c
 
 clean:
 	rm -f $(shell find -name "*.o")

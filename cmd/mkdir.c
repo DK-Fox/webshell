@@ -1,9 +1,9 @@
 /*
  * @ Description:This is the command "mkdir".
  * @ Author: SangYuchen
- * @ Date:2018-10-11
+ * @ Date:2018-10-29
  */
-
+#include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -15,29 +15,19 @@ int main(int argc,char *argv[]){
         err_quit("mkdir: usage: mkdir [-p] dir");
 
     //makdir dir
-    char *ch,*env;
     if(argc==2){
-        if((ch=strrchr(argv[1],'/'))){
-            *ch='\0';
-            if()
-        }
-        if()
-        exit(0;)
+        if(mkdir(argv[1],S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH))
+            err_sys("mkdir failed");
+        exit(0);
     }
 
     //mkdir -p dir
-    int c,i;
-    while((c=getopt(argc,argv,"p:"))!=EOF){
-        switch(c){
-            case '?':
-                err_msg("unrecognized option: -%c",optopt);
-                err_quit("mkdir: usage: mkdir [-p] dir");
-                break;
-            case 'p':
-                ulimits->traverse_array(ulimits,print_ulimit);
-                break;
-        }
-    }
+    if(argc==3&&strcmp(argv[1],"-p")==0){
+        if(mkdir(argv[2],S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH))
+            err_sys("mkdir failed");
+        exit(0);
 
-    exit(0);
+    }else{
+        err_quit("mkdri :usage: mkdir [-p] dir");
+    }
 }
