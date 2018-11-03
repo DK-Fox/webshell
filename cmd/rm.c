@@ -11,7 +11,7 @@
 #include "apue_err.h"
 #include <dirent.h>
 
-static void rm_dir(char *dirname);
+static int rm_dir(char *dirname);
 
 int main(int argc,char *argv[]){
     //Check format.
@@ -19,30 +19,30 @@ int main(int argc,char *argv[]){
         err_quit("rm: usage: rm file/dir");
 
     rm_dir(argv[1]);
-    remove(argv[1]);
     exit(0);
 
 }
 
-static void rm_dir(char *dirname){
+static int rm_dir(char *dirname){
     DIR *dp;
     struct dirent *dirp;
     struct stat statbuf;
     char path[MAXLINE];
+    if(stat(dirname,&statbuf)<0)
+        err_sys("stat failed");
+    if(!S_ISDIR(statbuf.st_mode)){
+        remove(dirname);
+        return 0;
+    }
     if((dp=opendir(dirname))==NULL)
         err_sys("can't open %s",dirname);
     while((dirp=readdir(dp))!=NULL){
         if(!strcmp(dirp->d_name,".")||!strcmp(dirp->d_name,".."))
             continue;
         sprintf(path,"%s/%s",dirname,dirp->d_name);
-        if(stat(path,&statbuf)<0)
-            err_sys("stat failed");
-        if(S_ISDIR(statbuf.st_mode)){
-            rm_dir(path);
-            remove(path);
-        }
-        else
-            remove(path);
+        rm_dir(path);
     }
+    remove(dirname);
+    return 0;
 }
 

@@ -43,6 +43,15 @@ all:
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/rename ../common/apue_err.c rename.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/ln ../common/apue_err.c ln.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/rmdir ../common/apue_err.c rmdir.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/groups ../common/apue_err.c groups.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/uname ../common/apue_err.c uname.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/date ../common/apue_err.c date.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/sync ../common/apue_err.c sync.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/cp ../common/apue_err.c cp.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/mv ../common/apue_err.c mv.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/basename ../common/apue_err.c basename.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/dirname ../common/apue_err.c dirname.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/cat ../common/apue_err.c cat.c
 
 clean:
 	rm -f $(shell find -name "*.o")
