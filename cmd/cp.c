@@ -23,8 +23,9 @@ int main(int argc,char *argv[]){
         err_sys("fopen failed");
     }
     char buf[MAXLINE];
-    while(fgets(buf,MAXLINE,fp1)!=NULL){
-        if(fputs(buf,fp2)==EOF){
+    int cnt;
+    while((cnt=fread(buf,1,MAXLINE,fp1))==MAXLINE){
+        if(fwrite(buf,1,cnt,fp2)!=cnt){
             fclose(fp1);
             fclose(fp2);
             if(access(argv[2],F_OK))
@@ -37,6 +38,14 @@ int main(int argc,char *argv[]){
         if(access(argv[2],F_OK))
             remove(argv[2]);
         err_ret("ferror");
+    }else{
+        if(fwrite(buf,1,cnt,fp2)!=cnt){
+            fclose(fp1);
+            fclose(fp2);
+            if(access(argv[2],F_OK))
+                remove(argv[2]);
+            err_sys("fputs failed");
+        }
     }
     fclose(fp1);
     fclose(fp2);

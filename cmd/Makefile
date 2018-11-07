@@ -52,6 +52,10 @@ all:
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/basename ../common/apue_err.c basename.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/dirname ../common/apue_err.c dirname.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/cat ../common/apue_err.c cat.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/head ../common/apue_err.c head.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/wc ../common/apue_err.c wc.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/touch ../common/apue_err.c touch.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINDIR)/kill ../common/apue_err.c kill.c
 
 clean:
 	rm -f $(shell find -name "*.o")

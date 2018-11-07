@@ -13,8 +13,6 @@
 #include <grp.h>
 #include <time.h>
 
-int compar(const void *ch1,const void *ch2);
-
 int main(int argc,char *argv[]){
     //ls
     DIR *dp;

@@ -66,4 +66,6 @@ typedef struct ulimit{
 #define ULIMIT_E "max nice"
 #define ULIMIT_R "max rt priority"
 
+void daemonize(const char *cmd);
+
 #endif

@@ -1,7 +1,7 @@
 /*
- * @ Description:This is the command "cat".
+ * @ Description:This is the command "head".
  * @ Author: SangYuchen
- * @ Date:2018-11-03
+ * @ Date:2018-11-06
  */
 
 #include <stdio.h>
@@ -13,35 +13,37 @@
 
 int main(int argc,char *argv[]){
     //Check format.
-    if(argc<2)
-        err_quit("cat: usage: cat file1 file2 ...");
+    if(argc!=4)
+        err_quit("head: usage: head -n num file");
 
-    int i;
-    for (i=1;i<argc;i++){
-        if(access(argv[i],F_OK)<0){
-            err_sys("access failed");
+    //verify it is a regular file.
+    struct stat statbuf;
+    if(stat(argv[3],&statbuf)<0)
+        err_sys("stat failed");
+    if(!S_ISREG(statbuf.st_mode)){
+        err_quit("file is not a regular file ");
+    }
+
+    //read some lines.
+    FILE * fp;
+    if((fp=fopen(argv[3],"r"))==NULL){
+        err_sys("fopen failed");
+    }
+    char buf[MAXLINE];
+    for(int i=0;i<atoi(argv[2]);i++){
+        if(fgets(buf, MAXLINE, fp)==NULL){
+            if(ferror(fp)){
+                fclose(fp);
+                err_sys("ferror");
+            }
         }
-
-        struct stat statbuf;
-        if(stat(argv[i],&statbuf)<0)
-            err_sys("stat failed");
-        if(S_ISDIR(statbuf.st_mode)){
-            err_quit("%s is a directory",argv[1]);
-        }else if(S_ISREG(statbuf.st_mode)){
-            FILE * fp;
-            if((fp=fopen(argv[i],"r"))==NULL){
-                err_sys("fopen failed");
-            }
-            char buf[MAXLINE];
-            while(fgets(buf,MAXLINE,fp)!=NULL){
-                if(fputs(buf,stdout)==EOF){
-                    fclose(fp);
-                    err_sys("fputs failed");
-                }
-            }
+        if(fputs(buf,stdout)==EOF){
             fclose(fp);
+            err_sys("fputs failed");
         }
     }
+    fflush(stdout);
+    fclose(fp);
 
     exit(0);
 }

@@ -33,11 +33,21 @@ int main(int argc,char *argv[]){
                 err_sys("fopen failed");
             }
             char buf[MAXLINE];
-            while(fgets(buf,MAXLINE,fp)!=NULL){
-                if(fputs(buf,stdout)==EOF){
+            int cnt;
+            while((cnt=fread(buf,1,MAXLINE,fp))==MAXLINE){
+                if(fwrite(buf,1,cnt,stdout)!=cnt){
                     fclose(fp);
                     err_sys("fputs failed");
                 }
+            }
+            if(ferror(fp)){
+                err_ret("ferror");
+            }else{
+                if(fwrite(buf,1,cnt,stdout)!=cnt){
+                    fclose(fp);
+                    err_sys("fputs failed");
+                }
+                fflush(stdout);
             }
             fclose(fp);
         }
