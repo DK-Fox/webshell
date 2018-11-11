@@ -46,9 +46,7 @@ int sh_cd(int argc,char **argv,Cmd *pcmd){
     }
 
     //Env:PWD
-    char cur_pwd[MAXLINE-4];
-    if(argv[1][0]!='/')
-        sprintf(cur_pwd,"%s/%s",env,argv[1]);
+    char *cur_pwd=getcwd(NULL,0);
     sprintf(env_pwd,"PWD=%s",cur_pwd);
     if(putenv(env_pwd)){
         err_ret("putenv failed:PWD");

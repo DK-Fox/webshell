@@ -33,7 +33,7 @@ int main(int argc,char *argv[]){
     }
 
     //Sort by name.
-    int len=i-1;
+    int len=i;
     int j;
     char *tmp;
     for(i=0;i<len-1;i++){

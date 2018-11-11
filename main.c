@@ -181,6 +181,7 @@ static int parse_command(Array* cmds,int argc,char **argv){
     else
         strcpy(cmd_argv0,argv[0]);
 
+
     //Traverse built-in command.
     for (i = 0; i < cmds->len && strcmp(((Cmd*)cmds->data[i])->cmd_name,cmd_argv0); i++);
     if(i!=cmds->len){

@@ -19,7 +19,7 @@ int main(int argc,char *argv[]){
         err_quit("touch: usage: touch -t YYYYmmddHHMMSS file");
 
     int fd=-1;
-    if(!access(argv[3],F_OK)){
+    if(access(argv[3],F_OK)){
         if((fd=open(argv[3],(O_CREAT|O_RDWR|O_TRUNC)))<0){
             err_sys("open failed");
         }
