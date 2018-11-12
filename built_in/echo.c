@@ -39,6 +39,12 @@ int sh_echo(int argc,char **argv,Cmd *pcmd){
     //Variable
     char * var;
     if(argv[1][0]=='$'){
+        //In environment.
+        if((var=getenv(&argv[1][1]))){
+            printf("%s\n",var);
+            return 0;
+        }
+
         //In variable.
         int i;
         for (i=0;i<vars->len;i++)
@@ -49,12 +55,7 @@ int sh_echo(int argc,char **argv,Cmd *pcmd){
         } else {
             printf("%s\n",((Var*)vars->data[i])->value);
         }
-
-        //In environment.
-        if((var=getenv(&argv[1][1]))){
-            printf("%s\n",var);
-            return 0;
-        }
+        return 0;
     }
 
     printf("%s\n",argv[1]);

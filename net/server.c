@@ -11,6 +11,7 @@ static void sig_pipe(int);
 static void * thr_rpws(void *arg);
 
 pthread_t ntid;
+pthread_t ptfk;
 int flag=0;
 int main(){
     //daemon
@@ -34,15 +35,22 @@ int main(){
     socklen_t clnt_addr_size =sizeof(clnt_addr);
     int clnt_sock;
     int pid;
-    while((clnt_sock=Accept(serv_sock,(struct sockaddr *)&clnt_addr,&clnt_addr_size)) !=0){
-
-        if((pid=fork())==-1){
+    while((clnt_sock=Accept(serv_sock,(struct sockaddr *)&clnt_addr,&clnt_addr_size)) >0){
+        if((pid=fork())<0){
             log_sys("fork err");
         }
         if(pid==0){
+            close(serv_sock);
+            if((pid=fork())<0)
+                log_sys("fork err");
+            if(pid>0)
+                exit(0);
+            sleep(1);
             main_handle(clnt_sock);
         }else{
             close(clnt_sock);
+            if(waitpid(pid,NULL,0)!=pid)
+                log_sys("waitpid error");
         }
     }
     close(serv_sock);
@@ -77,14 +85,15 @@ static void main_handle(int clnt_sock){
         err=pthread_create(&ntid,NULL,thr_rpws,&arg);
         if(err!=0)
             log_exit(err,"can't create thread");
-        while(1){
+        do{
             memset(buf,0,sizeof(buf));
             if((n=recv(clnt_sock,buf,MAXLINE,0)) < 0)
                 log_sys("recv failed");
             if(write(fd1[1],buf,n)!=n)
                 log_sys("write failed");
-        }
+        }while(strcmp(buf,"exit\n"));
         close(clnt_sock);
+        wait(NULL);
         exit(0);
     }else{
         close(fd1[1]);
@@ -104,6 +113,7 @@ static void main_handle(int clnt_sock){
                 log_sys("dup2 failed to stderr");
             close(fd2[1]);
         }
+
         //run shell.
         if(execl(SH_PATH,"myshell",(char *)0)<0)
             log_sys("execv failed");
@@ -123,9 +133,9 @@ static void * thr_rpws(void *arg){
     while(1){
         memset(buf,0,sizeof(buf));
         if((n=read(argv->fd,buf,MAXLINE))>0){
-            printf("%s",buf);
             if(send(argv->sockfd,buf,n,0)!=n)
                 log_sys("send socket failed");
         }
-   }
+    }
 }
+

@@ -43,9 +43,11 @@ int main(int argc,char *argv[]){
                 min=j;
             }
         }
-        tmp=file_buf[i];
-        file_buf[i]=file_buf[min];
-        file_buf[min]=tmp;
+        if(min!=i){
+            tmp=file_buf[i];
+            file_buf[i]=file_buf[min];
+            file_buf[min]=tmp;
+        }
     }
 
     //Print some message.

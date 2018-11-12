@@ -24,6 +24,9 @@ int main(){
 
     printf("Connect OK!\n");
 
+    if(setvbuf(stdout,NULL,_IONBF,0)!=0)
+        log_sys("setvbuf error");
+
     char buf[MAXLINE];
     int n;
     int err;
@@ -43,13 +46,13 @@ static void * thr_rtws(void *arg){
     int n;
     int *sockfd=(int *)arg;
     char buf[MAXLINE];
-    while(1){
+    do{
         memset(buf,0,sizeof(buf));
         fgets(buf,MAXLINE,stdin);
-        if(!strcmp(buf,"q\n"))
-            exit(0);
         n=strlen(buf);
         if(send(*sockfd,buf,n,0)!=n)
             err_sys("send socket failed");
-    }
+    }while(strcmp(buf,"exit\n"));
+    close(*sockfd);
+    exit(0);
 }

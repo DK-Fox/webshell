@@ -53,6 +53,13 @@ int main(){
 
     //Initialize alias array.
     alias_array_init();
+
+    //ensure buf style of pipe IO.
+    if(setvbuf(stdin,NULL,_IOLBF,0)!=0)
+        err_sys("setvbuf error");
+    if(setvbuf(stdout,NULL,_IONBF,0)!=0)
+        err_sys("setvbuf error");
+
     while(1){
         do
             //Output prompt.
@@ -150,14 +157,15 @@ static int readline(PArgc *argc,PArgv * argv){
     }
 
     //Convert to 'argc','argv'.
-    *argc=cnt;
-    *argv=(PArgv)malloc(cnt*sizeof(*argv));
+    *argc=cnt+1;
+    *argv=(PArgv)malloc(cnt*sizeof(*argv)+1);
     cnt=0;
     for(int i=0;i<length;i++){
         if(line_buf[i]!='\0' && line_buf[i-1]=='\0'){
             (*argv)[cnt++]=&line_buf[i];
         }
     }
+    (*argv)[cnt]=NULL;
 
     return 0;
 }
@@ -175,6 +183,7 @@ static int parse_command(Array* cmds,int argc,char **argv){
     int i;
     char cmd_argv0[MAXLINE];
 
+    argc--;
     //Variable.
     if(argc==1&&strchr(argv[0],'='))
         strcpy(cmd_argv0,"set");
