@@ -157,7 +157,7 @@ static int readline(PArgc *argc,PArgv * argv){
     }
 
     //Convert to 'argc','argv'.
-    *argc=cnt+1;
+    *argc=cnt;
     *argv=(PArgv)malloc(cnt*sizeof(*argv)+1);
     cnt=0;
     for(int i=0;i<length;i++){
@@ -183,7 +183,6 @@ static int parse_command(Array* cmds,int argc,char **argv){
     int i;
     char cmd_argv0[MAXLINE];
 
-    argc--;
     //Variable.
     if(argc==1&&strchr(argv[0],'='))
         strcpy(cmd_argv0,"set");
